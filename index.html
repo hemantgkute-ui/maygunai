@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaygunAI - AI Shopping Assistant</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; min-height: 100vh; }
+    .header { background: white; border-bottom: 1px solid #e5e7eb; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 36px; height: 36px; background: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .logo-text { font-size: 20px; font-weight: 600; color: #111; }
+    .logo-text span { color: #2563eb; }
+    .main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    .hero { text-align: center; margin-bottom: 2rem; }
+    .hero h1 { font-size: 2rem; font-weight: 700; color: #111; margin-bottom: 0.5rem; }
+    .hero p { color: #6b7280; font-size: 1rem; }
+    .search-bar { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .search-bar input { flex: 1; padding: 12px 16px; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 15px; outline: none; }
+    .search-bar input:focus { border-color: #2563eb; }
+    .search-bar button { padding: 12px 24px; background: #2563eb; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-weight: 500; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2rem; }
+    .chip { padding: 6px 14px; border: 1px solid #d1d5db; border-radius: 20px; font-size: 13px; color: #374151; cursor: pointer; background: white; }
+    .chip:hover { border-color: #2563eb; color: #2563eb; }
+    .ai-recs { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 2rem; }
+    .rec-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; }
+    .rec-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+    .badge-best { background: #dbeafe; color: #1d4ed8; }
+    .badge-budget { background: #dcfce7; color: #15803d; }
+    .badge-perf { background: #fef9c3; color: #a16207; }
+    .rec-name { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 4px; }
+    .rec-price { font-size: 16px; font-weight: 700; color: #2563eb; margin-bottom: 4px; }
+    .rec-why { font-size: 11px; color: #6b7280; line-height: 1.5; }
+    .section-label { font-size: 12px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+    .products { display: flex; flex-direction: column; gap: 10px; }
+    .product-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 16px; }
+    .product-rank { font-size: 20px; font-weight: 700; color: #d1d5db; min-width: 28px; }
+    .product-info { flex: 1; }
+    .product-name { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 6px; }
+    .product-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .product-price { font-size: 18px; font-weight: 700; color: #2563eb; }
+    .product-rating { font-size: 13px; color: #6b7280; }
+    .market-tag { font-size: 11px; padding: 3px 10px; border-radius: 10px; background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+    .buy-btn { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+    .buy-btn:hover { background: #1d4ed8; }
+    .loading { text-align: center; padding: 3rem; color: #9ca3af; display: none; font-size: 16px; }
+    .empty { text-align: center; padding: 3rem; color: #6b7280; }
+    @media (max-width: 600px) { .ai-recs { grid-template-columns: 1fr; } .product-card { flex-wrap: wrap; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-icon">🤖</div>
+    <div class="logo-text">Maygun<span>AI</span></div>
+  </div>
+  <div class="main">
+    <div class="hero">
+      <h1>AI Shopping Assistant</h1>
+      <p>Best products, best prices — powered by AI</p>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Best laptop under ₹50,000..." value="Best laptop under ₹50,000" />
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="chips">
+      <div class="chip" onclick="setQuery('Best smartphone under ₹20,000')">📱 Smartphone under ₹20k</div>
+      <div class="chip" onclick="setQuery('Best wireless earbuds under ₹5,000')">🎧 Earbuds under ₹5k</div>
+      <div class="chip" onclick="setQuery('Best gaming laptop under ₹80,000')">🎮 Gaming laptop</div>
+      <div class="chip" onclick="setQuery('Best budget TV under ₹30,000')">📺 Budget TV</div>
+    </div>
+    <div id="loading" class="loading">🔍 AI search karatoye...</div>
+    <div id="empty" class="empty" style="display:none">Query samajli nahi. Laptop, phone, TV, earbuds try kara.</div>
+    <div id="results" style="display:none">
+      <div class="section-label">AI Recommendations</div>
+      <div class="ai-recs" id="aiRecs"></div>
+      <div class="section-label">All Products</div>
+      <div class="products" id="productList"></div>
+    </div>
+  </div>
+  <script>
+    const DB = {
+      laptop: [
+        {name:"Lenovo IdeaPad Slim 3",price:42999,rating:4.3,reviews:2841,market:"Amazon"},
+        {name:"HP 15s Ryzen 5",price:44990,rating:4.2,reviews:1923,market:"Flipkart"},
+        {name:"Acer Aspire Lite",price:38499,rating:4.1,reviews:3102,market:"Amazon"},
+        {name:"ASUS VivoBook 15",price:47999,rating:4.4,reviews:987,market:"Flipkart"},
+        {name:"Dell Inspiron 3511",price:49990,rating:4.2,reviews:2210,market:"Amazon"}
+      ],
+      smartphone: [
+        {name:"Redmi Note 13 5G",price:17999,rating:4.4,reviews:8921,market:"Flipkart"},
+        {name:"Realme Narzo 60",price:16499,rating:4.2,reviews:5430,market:"Amazon"},
+        {name:"Samsung Galaxy A15",price:18999,rating:4.3,reviews:4102,market:"Amazon"},
+        {name:"POCO M6 Pro 5G",price:15999,rating:4.1,reviews:6700,market:"Flipkart"}
+      ],
+      earbuds: [
+        {name:"Boat Airdopes 141",price:1299,rating:4.0,reviews:41200,market:"Amazon"},
+        {name:"JBL Tune 215TWS",price:3499,rating:4.3,reviews:8900,market:"Flipkart"},
+        {name:"Sony WF-C500",price:4990,rating:4.5,reviews:3200,market:"Amazon"},
+        {name:"Noise Buds VS104",price:1799,rating:3.9,reviews:19800,market:"Flipkart"}
+      ],
+      gaming: [
+        {name:"ASUS TUF Gaming F15",price:74999,rating:4.5,reviews:3201,market:"Amazon"},
+        {name:"Lenovo IdeaPad Gaming 3",price:67990,rating:4.3,reviews:4112,market:"Flipkart"},
+        {name:"MSI Thin GF63",price:79999,rating:4.4,reviews:1890,market:"Amazon"}
+      ],
+      tv: [
+        {name:'Redmi 32" Smart TV',price:16999,rating:4.2,reviews:14200,market:"Amazon"},
+        {name:'Samsung 43" Crystal 4K',price:29990,rating:4.4,reviews:6700,market:"Flipkart"},
+        {name:'TCL 40" QLED',price:27999,rating:4.3,reviews:3400,market:"Amazon"}
+      ]
+    };
+    const RECS = {
+      laptop:{best:"Lenovo IdeaPad Slim 3",budget:"Acer Aspire Lite",perf:"HP 15s Ryzen 5",bestWhy:"Best balance of performance & price",budgetWhy:"₹38k madhe solid everyday laptop",perfWhy:"Ryzen 5 chipset – fast multitasking"},
+      smartphone:{best:"Redmi Note 13 5G",budget:"POCO M6 Pro 5G",perf:"Samsung Galaxy A15",bestWhy:"5G + AMOLED screen — top value",budgetWhy:"₹15,999 madhe excellent battery",perfWhy:"Samsung camera & software support"},
+      earbuds:{best:"JBL Tune 215TWS",budget:"Boat Airdopes 141",perf:"Sony WF-C500",bestWhy:"Sound quality ani comfort dono",budgetWhy:"₹1,299 madhe 5-hour battery",perfWhy:"Sony audio technology best in class"},
+      gaming:{best:"ASUS TUF Gaming F15",budget:"Lenovo IdeaPad Gaming 3",perf:"MSI Thin GF63",bestWhy:"RTX 3050 + best build quality",budgetWhy:"GTX 1650 – good for ₹68k",perfWhy:"Slim design + i5 12th gen power"},
+      tv:{best:'Samsung 43" Crystal 4K',budget:'Redmi 32" Smart TV',perf:'TCL 40" QLED',bestWhy:"Samsung brand + 4K clarity",budgetWhy:"Android TV madhe best value",perfWhy:"QLED panel – cinema-level colors"}
+    };
+    function detect(q){
+      q=q.toLowerCase();
+      if(q.includes('gaming'))return'gaming';
+      if(q.includes('laptop'))return'laptop';
+      if(q.includes('phone')||q.includes('smartphone')||q.includes('iphone')||q.includes('mobile'))return'smartphone';
+      if(q.includes('earbud')||q.includes('earphone')||q.includes('headphone'))return'earbuds';
+      if(q.includes('tv')||q.includes('television'))return'tv';
+      return null;
+    }
+    function fmt(n){return '₹'+n.toLocaleString('en-IN');}
+    function setQuery(q){document.getElementById('searchInput').value=q;doSearch();}
+    function doSearch(){
+      const q=document.getElementById('searchInput').value.trim();
+      if(!q)return;
+      document.getElementById('results').style.display='none';
+      document.getElementById('empty').style.display='none';
+      document.getElementById('loading').style.display='block';
+      setTimeout(()=>{
+        document.getElementById('loading').style.display='none';
+        const key=detect(q);
+        if(!key){document.getElementById('empty').style.display='block';return;}
+        const products=DB[key];
+        const recs=RECS[key];
+        document.getElementById('aiRecs').innerHTML=
+          '<div class="rec-card"><span class="rec-badge badge-best">Best Overall</span><div class="rec-name">'+recs.best+'</div><div class="rec-price">'+fmt(products.find(p=>p.name===recs.best)?.price||0)+'</div><div class="rec-why">'+recs.bestWhy+'</div></div>'+
+          '<div class="rec-card"><span class="rec-badge badge-budget">Best Budget</span><div class="rec-name">'+recs.budget+'</div><div class="rec-price">'+fmt(products.find(p=>p.name===recs.budget)?.price||0)+'</div><div class="rec-why">'+recs.budgetWhy+'</div></div>'+
+          '<div class="rec-card"><span class="rec-badge badge-perf">Best Performance</span><div class="rec-name">'+recs.perf+'</div><div class="rec-price">'+fmt(products.find(p=>p.name===recs.perf)?.price||0)+'</div><div class="rec-why">'+recs.perfWhy+'</div></div>';
+        document.getElementById('productList').innerHTML=products.map((p,i)=>
+          '<div class="product-card"><div class="product-rank">#'+(i+1)+'</div><div class="product-info"><div class="product-name">'+p.name+'</div><div class="product-meta"><span class="product-price">'+fmt(p.price)+'</span><span class="product-rating">⭐ '+p.rating.toFixed(1)+' ('+p.reviews.toLocaleString('en-IN')+')</span><span class="market-tag">'+p.market+'</span></div></div><button class="buy-btn" onclick="window.open(\'https://'+p.market.toLowerCase()+'.in\',\'_blank\')">Buy Now</button></div>'
+        ).join('');
+        document.getElementById('results').style.display='block';
+      },1200);
+    }
+    doSearch();
+  </script>
+</body>
+</html>
