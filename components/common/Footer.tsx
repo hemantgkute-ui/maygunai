@@ -89,7 +89,7 @@ export default function Footer() {
             © {new Date().getFullYear()} MaygunAI. All rights reserved.
           </p>
           <p className="text-xs text-gray-400 dark:text-gray-500">
-            Built with Next.js, Supabase & OpenAI · Affiliate links may earn a commission
+            Powered by TechMayGun · Affiliate links may earn a commission
           </p>
         </div>
       </div>

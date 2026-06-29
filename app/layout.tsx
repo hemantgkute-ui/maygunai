@@ -8,12 +8,12 @@ import Footer from '@/components/common/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'MaygunAI - AI-Powered Shopping Assistant',
-  description: 'Find the best products at best prices powered by AI. Get personalized recommendations for laptops, smartphones, and more.',
-  keywords: 'AI shopping, product recommendations, best products India, laptop recommendations, smartphone recommendations',
+  title: 'MaygunAI – Smart Shopping Assistant by TechMayGun',
+  description: 'MaygunAI by TechMayGun helps you find the best products at the best prices. Get personalized recommendations for laptops, smartphones, and more.',
+  keywords: 'MaygunAI, TechMayGun, AI shopping assistant, product recommendations, best products India, laptop recommendations, smartphone recommendations',
   openGraph: {
-    title: 'MaygunAI - AI Shopping Assistant',
-    description: 'Find the best products powered by AI',
+    title: 'MaygunAI – Smart Shopping Assistant',
+    description: 'Discover the best products with MaygunAI, the intelligent shopping assistant by TechMayGun.',
     type: 'website',
   },
 }

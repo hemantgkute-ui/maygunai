@@ -84,7 +84,7 @@ export default function HomePage() {
           >
             <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
             <Sparkles size={13} className="text-purple-500" />
-            Powered by OpenAI GPT-4o mini
+            Powered by TechMayGun
           </motion.div>
 
           {/* Heading */}
