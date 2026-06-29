@@ -18,12 +18,12 @@ const AuthContext = createContext<AuthContextValue>({
   signOut: async () => {},
 })
 
+const supabase = createClient()
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const supabase = createClient()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     return () => subscription.unsubscribe()
-  }, []) // supabase client is stable across renders
+  }, [])
 
   const signOut = async () => {
     await supabase.auth.signOut()
