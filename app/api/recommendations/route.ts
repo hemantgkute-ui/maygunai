@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { parseQuery, generateRecommendationExplanation } from '@/lib/openai/queryParser'
 import { getRecommendations } from '@/lib/recommendations/engine'
 
+export const maxDuration = 30
+
 export async function POST(req: NextRequest) {
   try {
     const { query } = await req.json()

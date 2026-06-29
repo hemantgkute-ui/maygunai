@@ -4,6 +4,8 @@ import { generateComparisonAnalysis } from '@/lib/openai/queryParser'
 import { buildComparison } from '@/lib/comparison/engine'
 import { MIN_COMPARISON_PRODUCTS, MAX_COMPARISON_PRODUCTS } from '@/lib/constants'
 
+export const maxDuration = 30
+
 export async function POST(req: NextRequest) {
   try {
     const { productIds, query } = await req.json()
