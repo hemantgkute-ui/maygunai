@@ -64,17 +64,17 @@ export async function POST(req: NextRequest) {
       })
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      try {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
         await supabase.from('searches').insert({
           user_id: user.id,
           query,
           parsed_query: parsed,
           results_count: products.length,
         })
-      } catch { /* non-critical */ }
-    }
+      }
+    } catch { /* non-critical */ }
 
     return NextResponse.json({
       recommendations: withExplanations,

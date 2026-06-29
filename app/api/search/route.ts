@@ -39,17 +39,17 @@ export async function GET(req: NextRequest) {
 
     if (error) throw error
 
-    // Log search if authenticated
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user && q) {
-      try {
+    // Log search if authenticated (non-critical)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && q) {
         await supabase.from('searches').insert({
           user_id: user.id,
           query: q,
           results_count: count ?? 0,
         })
-      } catch { /* non-critical */ }
-    }
+      }
+    } catch { /* non-critical */ }
 
     return NextResponse.json({
       data: data || [],

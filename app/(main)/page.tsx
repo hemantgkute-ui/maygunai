@@ -57,7 +57,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(124,58,237,0.08),transparent_70%)]" />
         <div className="max-w-4xl mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium mb-6">
-            <span>🤖</span> Powered by OpenAI GPT-4o
+            <span>🤖</span> Powered by OpenAI GPT-4o mini
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-gray-100 mb-4 leading-tight tracking-tight">
             Find the <span className="text-purple-600 dark:text-purple-400">Best Products</span>
