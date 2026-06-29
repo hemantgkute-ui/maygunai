@@ -4,8 +4,10 @@
 
 @layer base {
   :root {
-    --background: 245 243 255;
-    --foreground: 26 26 46;
+    --background: 250 248 255;
+    --foreground: 15 15 30;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+    --card-shadow-hover: 0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(124,58,237,0.12);
   }
 
   html {
@@ -13,33 +15,48 @@
   }
 
   body {
-    @apply bg-purple-50 text-gray-900 antialiased;
+    @apply bg-[#faf8ff] text-gray-900 antialiased;
   }
 
   .dark body {
     @apply bg-gray-950 text-gray-100;
   }
+
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
 }
 
 @layer components {
   .card {
-    @apply bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800;
+    @apply bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-hover {
+    @apply card;
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
   }
 
   .btn-primary {
-    @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md;
   }
 
   .btn-secondary {
-    @apply bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 border border-purple-200 dark:bg-purple-900/20 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-900/40;
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-purple-50 text-purple-700 font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 border border-purple-200 dark:bg-gray-900 dark:border-purple-800/60 dark:text-purple-300 dark:hover:bg-purple-900/20 shadow-sm;
   }
 
   .btn-ghost {
-    @apply text-gray-600 hover:text-purple-600 hover:bg-purple-50 font-medium px-4 py-2 rounded-lg transition-all duration-200 dark:text-gray-400 dark:hover:text-purple-400 dark:hover:bg-purple-900/20;
+    @apply inline-flex items-center justify-center gap-2 text-gray-600 hover:text-purple-700 hover:bg-purple-50 font-medium px-4 py-2 rounded-xl transition-all duration-200 dark:text-gray-400 dark:hover:text-purple-400 dark:hover:bg-purple-900/20;
   }
 
   .input {
-    @apply w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 transition-all duration-200;
   }
 
   .badge {
@@ -47,7 +64,19 @@
   }
 
   .skeleton {
-    @apply animate-pulse bg-gray-200 dark:bg-gray-800 rounded;
+    @apply animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg;
+  }
+
+  .glass {
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border border-white/20 dark:border-gray-700/50;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent;
+  }
+
+  .section-heading {
+    @apply text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight;
   }
 }
 
@@ -63,5 +92,9 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 24px rgba(124, 58, 237, 0.2);
   }
 }
