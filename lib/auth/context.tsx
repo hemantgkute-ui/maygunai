@@ -18,7 +18,12 @@ const AuthContext = createContext<AuthContextValue>({
   signOut: async () => {},
 })
 
-const supabase = createClient()
+let supabase: ReturnType<typeof createClient> | null = null
+try {
+  supabase = createClient()
+} catch {
+  // Supabase not configured — auth features disabled until env vars are set
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -26,6 +31,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
@@ -42,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    if (supabase) await supabase.auth.signOut()
   }
 
   return (

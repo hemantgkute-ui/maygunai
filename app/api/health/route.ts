@@ -8,7 +8,7 @@ export async function GET() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
-  const openaiConfigured = Boolean(process.env.OPENAI_API_KEY)
+  const aiEngineConfigured = Boolean(process.env.OPENAI_API_KEY)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'not set'
 
   let supabaseConnected = false
@@ -45,8 +45,8 @@ export async function GET() {
         productCount,
         error: supabaseError,
       },
-      openai: {
-        configured: openaiConfigured,
+      ai_engine: {
+        configured: aiEngineConfigured,
       },
     },
     app: {
@@ -56,7 +56,7 @@ export async function GET() {
       'NEXT_PUBLIC_SUPABASE_URL': Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
       'NEXT_PUBLIC_SUPABASE_ANON_KEY': Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
       'SUPABASE_SERVICE_ROLE_KEY': Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-      'OPENAI_API_KEY': Boolean(process.env.OPENAI_API_KEY),
+      'AI_ENGINE_KEY': Boolean(process.env.OPENAI_API_KEY),
       'NEXT_PUBLIC_APP_URL': Boolean(process.env.NEXT_PUBLIC_APP_URL),
       'database_migration_run': supabaseConnected,
       'products_seeded': productCount > 0,
